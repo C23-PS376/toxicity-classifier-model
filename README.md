@@ -9,10 +9,12 @@ This is a toxic comment classifier model that classifies raw text into 6 labels:
 -   `identity_hate`
 
 **Input**
-The model from [toxicity_classifier_training_capstone.ipynb](https://github.com/C23-PS376/toxicity-classifier-model/blob/main/toxicity_classifier_training_capstone.ipynb) takes input of raw text with 50 words maximum. If the model is fed with text more than 50 words, only 50 words will be taken.
+
+The model from [toxicity_classifier_training_capstone.ipynb](https://github.com/C23-PS376/toxicity-classifier-model/blob/main/toxicity_classifier_training_capstone.ipynb) takes input of raw text with **50 words** maximum. If the model is fed with text more than **50 words**, only **50 words** will be taken.
 
 **Output**
-The model from [toxicity_classifier_training_capstone.ipynb](https://github.com/C23-PS376/toxicity-classifier-model/blob/main/toxicity_classifier_training_capstone.ipynb) will output a 2D array with each row of 6 numbers. Each number denotes probability from 0 to 1. If the number is > 0.5, then it's positive to the corresponding label.
+
+The model from [toxicity_classifier_training_capstone.ipynb](https://github.com/C23-PS376/toxicity-classifier-model/blob/main/toxicity_classifier_training_capstone.ipynb) will output a **2D array with each row of 6 numbers**. Each number denotes probability from 0 to 1. If the number is > 0.5, then it's positive to the corresponding label.
 
 For example if the output is 
 `[[0.9763663 0.19614795 0.79277015 0.01046047 0.81799424 0.7410841 ]]`
@@ -108,7 +110,7 @@ The model is evaluated using recall, precision and F1 score. It's because the da
  - Recall = 0.68161124
  - F1 score = 0.6572882447429294
  
-The F1 for test data is only 0.66 because the test data contains text not only in English but also in other languages and emoji. While in this model we use English word embedding because the intended use for application is for English only. The best practice is to filter so only English words in dataset. But, there are 63978 rows of text and we only have 1 month to complete the entire project.
+The F1 for test data is only 0.66 because the test data contains text not only in English but also in other languages and emoji. While in this model we use English word embedding because the intended use for application is for English only. The best practice is to filter so only English words in dataset. But, there are 63978 rows of text and we only have 1 month to complete the entire project. Also in the dataset, there are many rows which have more text more than 50 words so the model clips them. This will reduce the model's ability to classify them.
  
 For more information about the evaluation metrics:
 
