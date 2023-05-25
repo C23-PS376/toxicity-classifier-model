@@ -31,6 +31,7 @@ Then we see the label in order, it means the output is:
 -   `identity_hate = positive`
 
 **Reference**
+
 To build this model, we took reference and code from:
 
  - [TextVectorization layer (keras.io)](https://keras.io/api/layers/preprocessing_layers/core_preprocessing_layers/text_vectorization/)
