@@ -10,6 +10,7 @@ This is a toxic comment classifier model that classifies raw text into 6 labels:
 -   `identity_hate`
 
 **Code**
+
 All the code and annotation for building and training the model can be found at [toxicity_classifier_training_capstone.ipynb](https://github.com/C23-PS376/toxicity-classifier-model/blob/main/toxicity_classifier_training_capstone.ipynb)
 
 This model is built using Tensorflow [Keras](https://keras.io/).
