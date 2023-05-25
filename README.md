@@ -1,12 +1,18 @@
+
 # Toxicity Classifier Model
 This is a toxic comment classifier model that classifies raw text into 6 labels:
 
--  `toxic`
+-   `toxic`
 -   `severe_toxic`
 -   `obscene`
 -   `threat`
 -   `insult`
 -   `identity_hate`
+
+**Code**
+All the code and annotation for building and training the model can be found at [toxicity_classifier_training_capstone.ipynb](https://github.com/C23-PS376/toxicity-classifier-model/blob/main/toxicity_classifier_training_capstone.ipynb)
+
+This model is built using Tensorflow [Keras](https://keras.io/).
 
 **Input**
 
@@ -23,7 +29,7 @@ We apply threshold of > 0.5 for positive, else negative, then:
     [[positive, negative, positive, negative, positive, positive]]
 
 Then we see the label in order, it means the output is:
--  `toxic = positive`
+-   `toxic = positive`
 -   `severe_toxic = negative`
 -   `obscene = positive`
 -   `threat = negative`
@@ -96,6 +102,63 @@ Reference:
  - Word Embeddings: [GloVe: Global Vectors for Word Representation (stanford.edu)](https://nlp.stanford.edu/projects/glove/)
  - GloVe: [GloVe - Wikipedia](https://en.wikipedia.org/wiki/GloVe)
 
+## Model Architecture
+There are 2 models in the [saved_model](https://github.com/C23-PS376/toxicity-classifier-model/tree/main/saved_model) folder:
+
+ - Model (No TextVectorization layer)
+`_________________________________________________________________
+Layer (type)                Output Shape              Param #   
+=================================================================
+embedding (Embedding)       (None, 50, 200)           4000400   
+
+bidirectional   (Bidirecti  (None, 50, 64)           59648     
+onal)                                                           
+
+bidirectional   (Bidirecti  (None, 64)               24832     
+onal)                                                           
+
+dense    (Dense)            (None, 32)                2080      
+
+dense    (Dense)            (None, 6)                 198       
+
+=================================================================
+Total params: 4,087,158
+Trainable params: 86,758
+Non-trainable params: 4,000,400
+_________________________________________________________________`
+
+ - End-to-end model (TextVectorization included)
+`_________________________________________________________________
+Layer (type)                Output Shape              Param #   
+=================================================================
+TextVectorization           (None, 50)               0          
+
+embedding (Embedding)       (None, 50, 200)           4000400   
+
+bidirectional   (Bidirecti  (None, 50, 64)           59648     
+onal)                                                           
+
+bidirectional   (Bidirecti  (None, 64)               24832     
+onal)                                                           
+
+dense    (Dense)            (None, 32)                2080      
+
+dense    (Dense)            (None, 6)                 198       
+
+=================================================================
+Total params: 4,087,158
+Trainable params: 86,758
+Non-trainable params: 4,000,400
+_________________________________________________________________`
+
+TextVectorization layer is used to convert raw text into sequences.
+
+End-to-end model is just the base model with TextVectorization appended on top of the Keras sequential model.
+
+If you use the model without TextVectorization layer, you have to convert raw text to sequences manually before feeding it to the model.
+
+These 2 models are saved in form of Tensorflow **saved model** format.
+
 ## Model Evaluation
 
 The model is evaluated using recall, precision and F1 score. It's because the dataset label is imbalance. There are too many negative labels compared to positive labels.
@@ -117,4 +180,3 @@ For more information about the evaluation metrics:
 
  - [Precision and Recall](https://en.wikipedia.org/wiki/Precision_and_recall)
  - [F1 score](https://en.wikipedia.org/wiki/F-score)
-
