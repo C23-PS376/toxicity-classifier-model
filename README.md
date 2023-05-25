@@ -106,50 +106,25 @@ Reference:
 There are 2 models in the [saved_model](https://github.com/C23-PS376/toxicity-classifier-model/tree/main/saved_model) folder:
 
  - Model (No TextVectorization layer)
-`_________________________________________________________________
-Layer (type)                Output Shape              Param #   
-=================================================================
-embedding (Embedding)       (None, 50, 200)           4000400   
 
-bidirectional   (Bidirecti  (None, 50, 64)           59648     
-onal)                                                           
-
-bidirectional   (Bidirecti  (None, 64)               24832     
-onal)                                                           
-
-dense    (Dense)            (None, 32)                2080      
-
-dense    (Dense)            (None, 6)                 198       
-
-=================================================================
-Total params: 4,087,158
-Trainable params: 86,758
-Non-trainable params: 4,000,400
-_________________________________________________________________`
+Layer (type) | Output Shape | Param # | 
+--- | --- | --- |
+(Embedding) | (None, 50, 200) | 4000400 |
+(Bidirectional LSTM) | (None, 50, 64) | 59648 |
+(Bidirectional LSTM) | (None, 64) | 24832 | 
+(Dense) | (None, 32) | 2080 | 
+(Dense) | (None, 6) | 198 |
 
  - End-to-end model (TextVectorization included)
-`_________________________________________________________________
-Layer (type)                Output Shape              Param #   
-=================================================================
-TextVectorization           (None, 50)               0          
-
-embedding (Embedding)       (None, 50, 200)           4000400   
-
-bidirectional   (Bidirecti  (None, 50, 64)           59648     
-onal)                                                           
-
-bidirectional   (Bidirecti  (None, 64)               24832     
-onal)                                                           
-
-dense    (Dense)            (None, 32)                2080      
-
-dense    (Dense)            (None, 6)                 198       
-
-=================================================================
-Total params: 4,087,158
-Trainable params: 86,758
-Non-trainable params: 4,000,400
-_________________________________________________________________`
+ 
+Layer (type) | Output Shape | Param # | 
+--- | --- | --- |
+(Text Vectorization) | (None, 50) | 0 |
+(Embedding) | (None, 50, 200) | 4000400 |
+(Bidirectional LSTM) | (None, 50, 64) | 59648 |
+(Bidirectional LSTM) | (None, 64) | 24832 | 
+(Dense) | (None, 32) | 2080 | 
+(Dense) | (None, 6) | 198 |
 
 TextVectorization layer is used to convert raw text into sequences.
 
