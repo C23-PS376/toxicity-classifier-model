@@ -145,6 +145,7 @@ We also evaluate this for each label instead of all labels.
  - `threat = 56%`
  - `insult = 79%`
  - `identity_hate = 63%`
+
 Average = 60%
 
 **Evaluation on test data:**
@@ -156,6 +157,7 @@ Average = 60%
  - `threat = 51%`
  - `insult = 67%`
  - `identity_hate = 58%`
+
  Average = 69%
  
 The F1 score for test data is only 60% because the test data contains text not only in English but also in other languages and emoji. While in this model we use English word embedding because the intended use for application is for English only. The best practice is to filter so only English words in dataset. But, there are 63978 rows of text and we only have 1 month to complete the entire project.
