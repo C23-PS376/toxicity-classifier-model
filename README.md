@@ -1,4 +1,3 @@
-
 # Toxicity Classifier Model
 This is a toxic comment classifier model that classifies raw text into 6 labels:
 
@@ -17,7 +16,14 @@ This model is built using Tensorflow [Keras](https://keras.io/).
 
 **Input**
 
-The model from [toxicity_classifier_training_capstone.ipynb](https://github.com/C23-PS376/toxicity-classifier-model/blob/main/toxicity_classifier_training_capstone.ipynb) takes input of raw text with **50 words** maximum. If the model is fed with text more than **50 words**, only **50 words** will be taken.
+The model from [toxicity_classifier_training_capstone.ipynb](https://github.com/C23-PS376/toxicity-classifier-model/blob/main/toxicity_classifier_training_capstone.ipynb) takes input of raw text with **200 words** maximum. If the model is fed with text more than **200 words**, only **200 words** will be taken.
+
+**Thresholds**
+
+The thresholds for output of the model are:
+`[0.67, 0.31, 0.47, 0.4, 0.25, 0.27]`
+
+We got this from using greedy search to find the best threshold for each label which maximizes F1 score.
 
 **Output**
 
@@ -25,7 +31,9 @@ The model from [toxicity_classifier_training_capstone.ipynb](https://github.com/
 
 For example if the output is 
 `[[0.9763663 0.19614795 0.79277015 0.01046047 0.81799424 0.7410841 ]]`
-We apply threshold of > 0.5 for positive, else negative, then:
+Then the thresholds:
+`[0.67, 0.31, 0.47, 0.4, 0.25, 0.27]`
+We apply threshold of (>) for positive, else negative, then:
 
     [[positive, negative, positive, negative, positive, positive]]
 
@@ -37,12 +45,17 @@ Then we see the label in order, it means the output is:
 -   `insult = positive`
 -   `identity_hate = positive`
 
+
 **Reference**
 
 To build this model, we took reference and code from:
 
  - [TextVectorization layer (keras.io)](https://keras.io/api/layers/preprocessing_layers/core_preprocessing_layers/text_vectorization/)
  - [Using pre-trained word embeddings (keras.io)](https://keras.io/examples/nlp/pretrained_word_embeddings/)
+
+# Saved Model
+
+You can download the saved model here: [https://drive.google.com/drive/folders/10M7n8k2hZXLT-upBNei2CMUDxSRY_Ksm?usp=sharing](https://drive.google.com/drive/folders/10M7n8k2hZXLT-upBNei2CMUDxSRY_Ksm?usp=sharing)
 
 # Dataset Source
 
@@ -94,7 +107,7 @@ We have to preprocess the data by joining them according to `id` then remove the
 Then out of 153164 rows, only 63978 are labeled correctly. The rest which are not used, have `-1` as labels. These rows which have `-1` as labels come from [Kaggle](https://www.kaggle.com/competitions/jigsaw-toxic-comment-classification-challenge/data), not because we decided so.
 
 ## Word Embeddings
-We use word embeddings trained using GloVe from Stanford University.
+We use word embeddings trained using GloVe from Stanford University. This is trained on Twitter comment dataset.
 
 There are a couple of versions from this word embeddings and we choose the one that has 200 dimensions for each word.
 
@@ -104,53 +117,48 @@ Reference:
  - GloVe: [GloVe - Wikipedia](https://en.wikipedia.org/wiki/GloVe)
 
 ## Model Architecture
-There are 2 models in the [saved_model](https://github.com/C23-PS376/toxicity-classifier-model/tree/main/saved_model) folder:
-
- - Model (No TextVectorization layer)
-
-Layer (type) | Output Shape | Param # | 
---- | --- | --- |
-(Embedding) | (None, 50, 200) | 4000400 |
-(Bidirectional LSTM) | (None, 50, 64) | 59648 |
-(Bidirectional LSTM) | (None, 64) | 24832 | 
-(Dense) | (None, 32) | 2080 | 
-(Dense) | (None, 6) | 198 |
-
- - End-to-end model (TextVectorization included)
  
 Layer (type) | Output Shape | Param # | 
 --- | --- | --- |
-(Text Vectorization) | (None, 50) | 0 |
-(Embedding) | (None, 50, 200) | 4000400 |
-(Bidirectional LSTM) | (None, 50, 64) | 59648 |
-(Bidirectional LSTM) | (None, 64) | 24832 | 
-(Dense) | (None, 32) | 2080 | 
-(Dense) | (None, 6) | 198 |
+(Text Vectorization) | (None, 200) | 0 |
+(Embedding) | (None, 200, 200) | 4000400 |
+(Bidirectional GRU) | (None, 256) | 253440 |
+(Dense) | (None, 128) | 32896 | 
+(Dense) | (None, 256) | 33024 | 
+(Dense) | (None, 6) | 1542 |
 
 TextVectorization layer is used to convert raw text into sequences.
 
-End-to-end model is just the base model with TextVectorization appended on top of the Keras sequential model.
-
-If you use the model without TextVectorization layer, you have to convert raw text to sequences manually before feeding it to the model.
-
-These 2 models are saved in form of Tensorflow **saved model** format.
 
 ## Model Evaluation
 
-The model is evaluated using recall, precision and F1 score. It's because the dataset label is imbalance. There are too many negative labels compared to positive labels.
+The model is evaluated using **F1 score**. It's because the dataset label is imbalance. There are too many negative labels compared to positive labels.
+
+We also evaluate this for each label instead of all labels.
 
 **Evaluation on train data:**
 
- - Precision = 0.8649898
- - Recall = 0.67704713
- - F1 score = 0.7595652663133241
+ F1 score:
+ - `toxic = 79%`
+ - `severe_toxic = 53%`
+ - `obscene = 84%`
+ - `threat = 56%`
+ - `insult = 79%`
+ - `identity_hate = 63%`
+Average = 60%
 
 **Evaluation on test data:**
- - Precision = 0.63464135
- - Recall = 0.68161124
- - F1 score = 0.6572882447429294
+
+ F1 score:
+ - `toxic = 71%`
+ - `severe_toxic = 42%`
+ - `obscene = 70%`
+ - `threat = 51%`
+ - `insult = 67%`
+ - `identity_hate = 58%`
+ Average = 69%
  
-The F1 for test data is only 0.66 because the test data contains text not only in English but also in other languages and emoji. While in this model we use English word embedding because the intended use for application is for English only. The best practice is to filter so only English words in dataset. But, there are 63978 rows of text and we only have 1 month to complete the entire project. Also in the dataset, there are many rows which have more text more than 50 words so the model clips them. This will reduce the model's ability to classify them.
+The F1 score for test data is only 60% because the test data contains text not only in English but also in other languages and emoji. While in this model we use English word embedding because the intended use for application is for English only. The best practice is to filter so only English words in dataset. But, there are 63978 rows of text and we only have 1 month to complete the entire project.
  
 For more information about the evaluation metrics:
 
