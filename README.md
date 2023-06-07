@@ -1,3 +1,4 @@
+
 # Toxicity Classifier Model
 This is a toxic comment classifier model that classifies raw text into 6 labels:
 
@@ -23,11 +24,11 @@ The model from [toxicity_classifier_training_capstone.ipynb](https://github.com/
 The thresholds for output of the model are:
 `[0.67, 0.31, 0.47, 0.4, 0.25, 0.27]`
 
-We got this from using greedy search to find the best threshold for each label which maximizes F1 score.
+We got this from using greedy search to find the best threshold for each label which maximizes binary accuracy.
 
 **Output**
 
-The model from [toxicity_classifier_training_capstone.ipynb](https://github.com/C23-PS376/toxicity-classifier-model/blob/main/toxicity_classifier_training_capstone.ipynb) will output a **2D array with each row of 6 numbers**. Each number denotes probability from 0 to 1. If the number is > 0.5, then it's positive to the corresponding label.
+The model from [toxicity_classifier_training_capstone.ipynb](https://github.com/C23-PS376/toxicity-classifier-model/blob/main/toxicity_classifier_training_capstone.ipynb) will output a **2D array with each row of 6 numbers**. Each number denotes probability from 0 to 1. If the number is > threshold, then it's positive to the corresponding label.
 
 For example if the output is 
 `[[0.9763663 0.19614795 0.79277015 0.01046047 0.81799424 0.7410841 ]]`
@@ -132,37 +133,34 @@ TextVectorization layer is used to convert raw text into sequences.
 
 ## Model Evaluation
 
-The model is evaluated using **F1 score**. It's because the dataset label is imbalance. There are too many negative labels compared to positive labels.
+The model is evaluated using **Binary Accuracy** because the result are numbers from 0 to 1.
 
 We also evaluate this for each label instead of all labels.
 
 **Evaluation on train data:**
 
- F1 score:
- - `toxic = 79%`
- - `severe_toxic = 53%`
- - `obscene = 84%`
- - `threat = 56%`
- - `insult = 79%`
- - `identity_hate = 63%`
+Binary Accuracy:
+ - `toxic = 93.3%`
+ - `severe_toxic = 99%`
+ - `obscene = 95.6%`
+ - `threat = 99.7%`
+ - `insult = 95.1%`
+ - `identity_hate = 99.1%`
 
-Average = 60%
+Average = 96.9%
 
 **Evaluation on test data:**
 
- F1 score:
- - `toxic = 71%`
- - `severe_toxic = 42%`
- - `obscene = 70%`
- - `threat = 51%`
- - `insult = 67%`
- - `identity_hate = 58%`
+Binary Accuracy:
+ - `toxic = 93%`
+ - `severe_toxic = 99.4%`
+ - `obscene = 95%`
+ - `threat = 99.6%`
+ - `insult = 94.7%`
+ - `identity_hate = 98.9%`
 
- Average = 69%
- 
-The F1 score for test data is only 60% because the test data contains text not only in English but also in other languages and emoji. While in this model we use English word embedding because the intended use for application is for English only. The best practice is to filter so only English words in dataset. But, there are 63978 rows of text and we only have 1 month to complete the entire project.
- 
-For more information about the evaluation metrics:
+ Average = 96.7%
 
- - [Precision and Recall](https://en.wikipedia.org/wiki/Precision_and_recall)
- - [F1 score](https://en.wikipedia.org/wiki/F-score)
+For more information about the evaluation metric:
+
+ - [Binary Accuracy](https://keras.io/api/metrics/accuracy_metrics/#binaryaccuracy-class)
